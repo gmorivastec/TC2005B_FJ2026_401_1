@@ -3,6 +3,8 @@
 
 // using namespaces
 using UnityEngine;
+using UnityEngine.Assertions;
+using TMPro;
 
 public class Motion : MonoBehaviour
 {
@@ -12,6 +14,10 @@ public class Motion : MonoBehaviour
     // how to add some external parameters
     [SerializeField]
     private float _speed = 5;
+
+    [SerializeField]
+    private TMP_Text _textito; // THIS IS PRONE TO NULLREFERENCE EXCEPTIONS!
+
 
     // we are going to be using the monobehaviour lifecycle
     // lifecycle?
@@ -24,6 +30,7 @@ public class Motion : MonoBehaviour
     // first method to be invoked when a GO is created
     void Awake() 
     {
+        Assert.IsNotNull(_textito, "TEXTITO IS NULL ON MOTION, PLEASE VERIFY");
         print("AWAKE WORLD");
         inputActions = new InputSystem_Actions();
     }
@@ -88,7 +95,7 @@ public class Motion : MonoBehaviour
 
         // Time.deltaTime - a variable in which unity saves how much time has passed
         // between the last frame and the current one
-        transform.Translate(motion * Time.deltaTime * _speed);
+        transform.Translate(motion * Time.deltaTime * _speed, Space.World);
     }
 
     // this method is invoked every loop after all updates are done
@@ -108,4 +115,81 @@ public class Motion : MonoBehaviour
     // 1 all of the objects involved have colliders
     // 2 at least one object has a rigidbody
     // 3 the object with the rigidbody is moving
+
+    // RIGIDBODY (PREMIUM QUIZ MATERIAL)
+    // - component that "subscribes" the object in the physics engine
+    // - the engine cares about the object's motion (and it can change it)
+
+    // the object must be moving BECAUSE for performance reasons
+    // a rigidbody that is moving too slowly (or not moving) is considered asleep 
+
+
+    // messages that we can listen to 
+    // inolved in collision
+
+    void OnCollisionEnter(Collision collision)
+    {
+        // when the objects were not touching last frame
+        // but are touching this frame
+        print("ON COLLISION ENTER");
+
+        // Collision - object that contains info about the collision
+        // such as:
+        // - touching points
+        // - forces involved
+        // - reference to the other collider 
+        // Etc.
+
+        // the transform reference in collision is a reference to
+        // the transform component in the other object
+        print(collision.transform.name);
+        print(collision.transform.gameObject.layer);
+        print(collision.transform.tag);
+
+        if(collision.transform.gameObject.layer == 3)
+            print("LAYERCITA FOUND");
+
+        if(collision.transform.tag == "Tagcita")
+            print("TAGCITA FOUND"); 
+
+    }
+
+    void OnCollisionStay(Collision collision)
+    {
+        // when the objects were touching last frame
+        // and are still touching
+        print("ON COLLISION STAY");
+    }
+
+    void OnCollisionExit(Collision collision)
+    {
+        
+        // when the objects were touching last frame
+        // but are not touching this frame
+        print("ON COLLISION EXIT");
+    }
+
+    // trigger vs regular collider
+    // - trigger has no physical reaction
+    // - there are no physics involved in a trigger collision
+
+    void OnTriggerEnter(Collider other)
+    {
+        print("TRIGGER ENTER");
+        print(other.transform.name);
+        print(other.transform.gameObject.layer);
+        print(other.transform.tag);
+
+        _textito.text = other.transform.name;
+    }
+
+    void OnTriggerStay(Collider other)
+    {
+        print("TRIGGER STAY");
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        print("TRIGGER EXIT");
+    }
 }
