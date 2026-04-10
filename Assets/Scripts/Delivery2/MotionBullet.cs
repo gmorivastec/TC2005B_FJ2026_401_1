@@ -20,6 +20,7 @@ public class MotionBullet : MonoBehaviour
     void OnCollisionEnter(Collision collision)
     {
         // para destruir usamos el método destroy
-        Destroy(gameObject);
+        //Destroy(gameObject);
+        PoolManager.Instance.ReturnObject(this);
     }
 }
