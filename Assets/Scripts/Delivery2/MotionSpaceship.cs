@@ -128,9 +128,9 @@ public class MotionSpaceship : MonoBehaviour
     {
         while(true)
         {
-            print("COROUTINE LOOP (BEFORE WAIT)");
+            //print("COROUTINE LOOP (BEFORE WAIT)");
             yield return new WaitForSeconds(2);
-            print("COROUTINE LOOP (AFTER WAIT)");
+            //print("COROUTINE LOOP (AFTER WAIT)");
         }
     }
 
